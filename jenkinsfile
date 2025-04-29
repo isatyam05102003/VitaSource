@@ -12,13 +12,15 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Build Image') {
+
+        stage('Build Docker Image') {
             steps {
                 script {
                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
         }
+
         stage('Push to DockerHub') {
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub-credentials-id') {
@@ -28,6 +30,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy Container') {
             steps {
                 sh "docker rm -f vitasource-app || true"
